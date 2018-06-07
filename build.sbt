@@ -13,9 +13,9 @@ lazy val common = ( project in file("enki-common") )
   .settings(commonSettings)
   .settings(name := "enki-common")
 
-lazy val crdts = ( project in file("enki-crdts") )
+lazy val crdts = ( project in file("enki-crdt") )
   .settings(commonSettings)
-  .settings(name := "enki-crdts")
+  .settings(name := "enki-crdt")
   .dependsOn(common)
 
 
