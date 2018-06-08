@@ -1,18 +1,16 @@
 package Enki
-import scala.concurrent.{ExecutionContext, Future}
 
+import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.util.Try
+import scala.language.implicitConversions
 
 class Pipe[A](a: A) {
   def |>[B](f: A => B) = f(a)
 }
 
-object Pipe {
-  def apply[A](v: A) = new Pipe(v)
-}
 
 object PipeOps {
-  import scala.language.implicitConversions
-  implicit def toPipe[A](a: A) = Pipe(a)
+  implicit def toPipe[A](a: A) = new Pipe(a)
 }
 
 
@@ -51,6 +49,24 @@ object Path {
 
 
 
+class PromiseExt[T](p: Promise[T]) {
+
+  def setValue(t: T) = {
+    val a = Try {t}
+    p.complete(a)
+  }
+
+
+
+}
+
+
+object PromiseOps {
+  implicit def toPromiseExt[T](p: Promise[T]) = {
+    new PromiseExt(p)
+  }
+}
+
 
 class FutureExtensions[T](fut: Future[T]) {
 
@@ -62,12 +78,7 @@ class FutureExtensions[T](fut: Future[T]) {
 }
 
 
-object FutureExtensions {
-  def apply[T](fut: Future[T]) = new FutureExtensions(fut)
-}
-
-
 object FutureOps {
-  implicit def toExtendedF[T](f: Future[T]) = FutureExtensions(f)
+  implicit def toExtendedF[T](f: Future[T]) = new FutureExtensions(f)
 }
 

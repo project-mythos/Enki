@@ -1,7 +1,7 @@
 package Enki.LoadBalancer
 
 import scala.util.Random
-import scala.concurrent.{Future, ExecutionContext}
+import com.twitter.util.Future
 import Enki.CHash
 
 import scala.math.Ordering
@@ -9,9 +9,10 @@ import scala.util.Random
 
 import java.util.concurrent.atomic.AtomicLong
 import scala.math
-import Enki.FutureOps._
 
 import Enki.KeyHasher.{FNV1A_64, MURMUR3}
+
+
 
 trait Status
 case object Alive extends Status
@@ -22,7 +23,7 @@ case object Dead extends Status
 trait LB[T] {
 
   def pick(nodes: Vector[T]): T
-  def use[U](nodes: Vector[T], f: T => Future[U])(implicit ec: ExecutionContext): Future[U]
+  def use[U](nodes: Vector[T], f: T => Future[U]): Future[U]
 }
 
 
@@ -30,11 +31,11 @@ trait LB[T] {
 
 trait RoutingLB[T] {
   def pick(nodes: Vector[T], key: Array[Byte]): T
-  def use[U](nodes: Vector[T], key: Array[Byte], f: T => Future[U])(implicit ec: ExecutionContext): Future[U]
+  def use[U](nodes: Vector[T], key: Array[Byte], f: T => Future[U]): Future[U]
 }
 
 
-case class LeastLoaded(host: String, id: String) {
+case class LeastLoaded(id: Long, host: String) {
 
   private val serverLoad = new AtomicLong(0L)
 
@@ -57,7 +58,7 @@ object P2C extends LB[LeastLoaded] {
   }
 
 
-  def use[U](nodes: Vector[LeastLoaded], f: LeastLoaded => Future[U])(implicit ec: ExecutionContext): Future[U] = {
+  def use[U](nodes: Vector[LeastLoaded], f: LeastLoaded => Future[U]) = {
     val node = pick(nodes)
     node.incr
     f(node) ensure node.decr
@@ -81,7 +82,7 @@ class CHashLeastLoaded(factor: Int) extends RoutingLB[LeastLoaded] {
     shards.minBy(x => x.load)
   }
 
-  def use[U](nodes: Vector[LeastLoaded], key: Array[Byte], f: LeastLoaded => Future[U])(implicit ec: ExecutionContext): Future[U] = {
+  def use[U](nodes: Vector[LeastLoaded], key: Array[Byte], f: LeastLoaded => Future[U]) = {
     val node = pick(nodes, key)
     node.incr
     f(node) ensure node.decr
@@ -109,7 +110,7 @@ object P2CPKG extends RoutingLB[LeastLoaded] {
     else c2
   }
 
-  def use[U](nodes: Vector[LeastLoaded], key: Array[Byte], f: LeastLoaded => Future[U])(implicit ec: ExecutionContext) = {
+  def use[U](nodes: Vector[LeastLoaded], key: Array[Byte], f: LeastLoaded => Future[U]) = {
     val node = pick(nodes, key)
     node.incr
     f(node) ensure node.decr

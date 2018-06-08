@@ -1,6 +1,6 @@
-package Enki
+package Enki_DT
 
-trait ClockOPs {
+trait Clock {
   type T
 
   def increment(t: T): T
@@ -13,14 +13,13 @@ trait ClockOPs {
     compare(l, r) > 0 
   }
 
-
 }
 
 
 case class Dot(id: String, counter: Long)
 
 
-object Dot extends ClockOPs {
+object Dot extends Clock {
   type T = Dot
 
   def increment(dot: Dot) = {
@@ -52,7 +51,7 @@ object Dot extends ClockOPs {
 
 case class HybridClock(id: String, counter: Long, stamp: Long)
 
-object HybridClock extends ClockOPs {
+object HybridClock extends Clock {
   type T = HybridClock
 
   def increment(hc: HybridClock) = {

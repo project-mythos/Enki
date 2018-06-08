@@ -1,4 +1,4 @@
-package Enki
+package Enki_DT
 
 case class Entry[T](element: T, dot: Dot)
 case class ORSet[T](local: Dot, entries: Set[Entry[T]], dots: Set[Dot])
