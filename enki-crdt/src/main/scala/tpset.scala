@@ -26,8 +26,8 @@ object TPSet extends GCSet[TPSet, Int] {
 
 
   def merge[T](l: TPSet[T], r: TPSet[T]) = {
-    val e = l.entries ++ r.entries
     val ts = l.tombstones ++ r.tombstones
+    val e = (l.entries ++ r.entries) filterNot(x => ts.contains(x)) 
     l.copy(entries=e, tombstones=ts)
   }
 
@@ -48,6 +48,7 @@ object TPSet extends GCSet[TPSet, Int] {
 
   }
 
+  def empty[T]() = TPSet(Set[T](), Set[T]())
 
 
 }
@@ -56,11 +57,11 @@ object TPSet extends GCSet[TPSet, Int] {
 
 /** Evicts Expired Tombstone after TTL has elapsed*/
 
-case class LWWEntry[T](element: T, ts: Duration)
+case class LWWEntry[T](element: T, ts: Long)
 case class LWWSet[T](entries: Set[LWWEntry[T]], tombstones: Set[LWWEntry[T]])
 
 
-object LWWSet extends GCSet[LWWSet, Duration] {
+object LWWSet extends GCSet[LWWSet, Long] {
 
   def add[T](s: LWWSet[T], t: T) = {
     val e = s.entries + LWWEntry(t, getTime)
@@ -69,14 +70,14 @@ object LWWSet extends GCSet[LWWSet, Duration] {
 
 
 
-  def getTime: Duration = {
-    System.currentTimeMillis |> {x => Duration(x, MILLISECONDS)}
+  def getTime: Long = {
+    System.currentTimeMillis 
   }
 
 
 
 
-  def gc[T](s: LWWSet[T], ttl: Duration) = {
+  def gc[T](s: LWWSet[T], ttl: Long) = {
 
     val cutoff = getTime - ttl
 
@@ -121,5 +122,8 @@ object LWWSet extends GCSet[LWWSet, Duration] {
     l.copy(entries = e, tombstones = ts)
   }
 
+  def empty[T]() = {
+    LWWSet( Set[LWWEntry[T]](), Set[LWWEntry[T]]() )
+  }
 
 }

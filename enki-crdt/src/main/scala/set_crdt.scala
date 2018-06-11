@@ -9,7 +9,6 @@ trait SetCRDT[A[_]] {
 
   def merge[T](l: A[T], r: A[T]): A[T]
   def query[T](s: A[T]): Set[T]
-
 }
 
 
