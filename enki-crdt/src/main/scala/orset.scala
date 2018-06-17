@@ -28,7 +28,7 @@ object ORSet extends SetCRDT[ORSet] {
         val dots = v.map(x => x.dots)
         val d1 = dots.foldLeft( Set[Dot]() ) {case (acc, ds) => acc ++ ds }
         Entry(e, d1)
-    }.toSet 
+    }.toSet
 
     orset.copy(entries=entries1)
   }
@@ -57,85 +57,45 @@ object ORSet extends SetCRDT[ORSet] {
   }
 
 
- 
-
-
-/*
-  def add[T](orset: ORSet[T], e: T) = {
-
-    val local = Dot.increment(orset.local)
-    val entries = orset.entries + Entry(e, local)
-    val dots = orset.dots + local
-
-    ORSet(local, entries, dots)
-  }
-
- */
-
 
 
   def delete[T](orset: ORSet[T], e: T) = {
     val local = Dot.increment(orset.local)
     val entries = orset.entries.filter (x => x.element != e)
-    orset.copy(local=local, entries=entries) 
+    orset.copy(local=local, entries=entries)
   }
 
 
   def query[T](orset: ORSet[T]): Set[T] = {
-    orset.entries.map(x => x.element) 
+    orset.entries.map(x => x.element)
   }
 
-/*
+
   def toAdd[T](l: ORSet[T], r: ORSet[T]) = {
 
     l.entries.filter {x =>
       val has_e = r.entries.contains(x) != true
-      val has_d = r.dots.contains(x.dot) != true
-      has_e && has_d 
-    }
-
-  }
-
- */
-
-
-   def toAdd[T](l: ORSet[T], r: ORSet[T]) = {
-
-    l.entries.filter {x =>
-      val has_e = r.entries.contains(x) != true
       val has_d = (x.dots subsetOf r.dots) != true
-      has_e && has_d 
+      has_e && has_d
     }
 
   }
 
 
-/*
-  def toRemove[T](l: ORSet[T], r: ORSet[T]) = {
 
-    l.entries.filter { x =>
-      val is_dot = r.dots.contains(x.dot)
-      val is_e = r.entries.contains(x) != true
-      is_dot && is_e 
-    }
-
-  }
-
-
- */
 
   def toRemove[T](l: ORSet[T], r: ORSet[T]) = {
 
     l.entries.filter { x =>
       val is_dot = x.dots subsetOf r.dots
       val is_e = r.entries.contains(x) != true
-      is_dot && is_e 
+      is_dot && is_e
     }
   }
 
- 
+  
   def merge[T](l: ORSet[T], r: ORSet[T]) = {
-    val e1 = toAdd(r, l) 
+    val e1 = toAdd(r, l)
     val e2 = l.entries -- toRemove(l, r)
 
     val entries = e1 ++ e2

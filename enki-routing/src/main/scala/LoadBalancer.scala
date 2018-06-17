@@ -20,7 +20,7 @@ case object Dead extends Status
 
 
 
-trait LB[T] {
+trait Distributor[T] {
 
   def pick(nodes: Vector[T]): T
   def use[U](nodes: Vector[T], f: T => Future[U]): Future[U]
@@ -29,7 +29,7 @@ trait LB[T] {
 
 
 
-trait RoutingLB[T] {
+trait RoutingDistributor[T] {
   def pick(nodes: Vector[T], key: Array[Byte]): T
   def use[U](nodes: Vector[T], key: Array[Byte], f: T => Future[U]): Future[U]
 }
@@ -46,7 +46,7 @@ case class LeastLoaded(id: Long, host: String) {
 
 
 
-object P2C extends LB[LeastLoaded] {
+object P2C extends Distributor[LeastLoaded] {
 
   def pick(nodes: Vector[LeastLoaded]) = {
 
@@ -71,7 +71,7 @@ object P2C extends LB[LeastLoaded] {
 
 
 
-class CHashLeastLoaded(factor: Int) extends RoutingLB[LeastLoaded] {
+class CHashLeastLoaded(factor: Int) extends RoutingDistributor[LeastLoaded] {
 
   val hasher = FNV1A_64
   val S = CHash.Sharder
@@ -94,7 +94,7 @@ class CHashLeastLoaded(factor: Int) extends RoutingLB[LeastLoaded] {
 
 
 
-object P2CPKG extends RoutingLB[LeastLoaded] {
+object P2CPKG extends RoutingDistributor[LeastLoaded] {
 
 
 

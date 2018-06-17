@@ -13,13 +13,13 @@ object PipeOps {
 
 case class SyncVar[T](seed: T) {
   private var state = seed
-  import PipeOps._ 
 
-  def get = seed
+  def get = state
 
   def update(f: T => T) = {
-    val s = get |> f
+    val s = f(get)
     synchronized {state = s}
+    s
   }
 
 
@@ -32,11 +32,15 @@ object Path {
 
   type T = List[String]
 
-  def toString(path: T): String = {
+  def to_string(path: T): String = path.mkString("/")
+
+  def fromString(p: String) = p.split("/")
+
+  def pct_encode(path: T): String = {
     path.mkString("/").replaceAll("/", "%2F")
   }
 
-  def ofString(x: String): T = {
+  def pct_decode(x: String): T = {
     val s = x.replaceAll("%2F", "/")
     s.split("/").toList
   }

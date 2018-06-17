@@ -1,0 +1,48 @@
+import java.nio.ByteBuffer;
+
+
+
+public static class VarInt {
+    /* bitmasks for splitting int */
+    private static final int[] bitmasks = { 0x0000007F, 0x00003F80, 0x001FC000, 0x0FE00000, 0xF0000000 };
+    
+    /* shift value for nibbles */
+    private static final int[] shift_value = { 0, 7, 14, 21, 28 };
+    
+    private static ByteBuffer encodeVarInt(int input) {
+        /* do signed magic */
+        int value = (input << 1) ^ (input >> 31);
+        ByteBuffer buf = ByteBuffer.allocate(5);
+       
+        for (int i = 0; i < 5; ++i) {
+            byte b = (byte) ((bitmasks[i] & value) >> shift_value[i]);
+            
+            byte nextb = (byte) ((bitmasks[i+1] & value) >> shift_value[i+1]);
+            if (nextb == 0) {
+                buf.put(b);
+                break;
+            }
+            
+            b = (byte) (0x80 | b);
+            buf.put(b);
+        }
+        
+        buf.flip();
+        return buf;
+    }
+    
+    private static int decodeVarInt(ByteBuffer varint) {
+        int out = 0;
+        for (int i = 0; i < varint.limit(); ++i) {
+            byte b = varint.get(i);
+            if (i + 1 != varint.limit()) {
+                b = (byte) (0x80 ^ b);
+            }
+            
+            out |= b << shift_value[i];
+        }
+        
+        /* undo signed magic */
+        return (out >>> 1) ^ -(out & 1);
+    }
+}
