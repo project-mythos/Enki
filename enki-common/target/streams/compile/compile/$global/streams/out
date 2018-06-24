@@ -1,4 +1,0 @@
-[0m[[0m[31merror[0m] [0m[0m/home/sam/Programming/infrastructure/Enki/enki-common/src/main/java/RabinKarpHash.java:29:1: cannot find symbol[0m
-[0m[[0m[31merror[0m] [0m[0m  symbol:   variable Arrays[0m
-[0m[[0m[31merror[0m] [0m[0m  location: class rollinghash.RabinKarpHash[0m
-[0m[[0m[31merror[0m] [0m[0m        buf = Arrays.copyOfRange(bytes, off, len);[0m
