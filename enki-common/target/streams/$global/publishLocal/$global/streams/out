@@ -1,0 +1,10 @@
+[0m[[0m[0minfo[0m] [0m[0m:: delivering :: demons#enki-common_2.12;0.3-SNAPSHOT :: 0.3-SNAPSHOT :: integration :: Sat Jun 23 04:59:08 EDT 2018[0m
+[0m[[0m[0mdebug[0m] [0m[0m	options = status=integration pubdate=Sat Jun 23 04:59:08 EDT 2018 validate=true resolveDynamicRevisions=true merge=true resolveId=null pubBranch=null[0m
+[0m[[0m[0minfo[0m] [0m[0m	delivering ivy file to /home/sam/Programming/infrastructure/Enki/enki-common/target/scala-2.12/ivy-0.3-SNAPSHOT.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m	deliver done (8ms)[0m
+[0m[[0m[0mdebug[0m] [0m[0mlocal do not support transaction. ivy pattern does not use revision as a directory[0m
+[0m[[0m[0minfo[0m] [0m[0m	published enki-common_2.12 to /home/sam/.ivy2/local/demons/enki-common_2.12/0.3-SNAPSHOT/poms/enki-common_2.12.pom[0m
+[0m[[0m[0minfo[0m] [0m[0m	published enki-common_2.12 to /home/sam/.ivy2/local/demons/enki-common_2.12/0.3-SNAPSHOT/jars/enki-common_2.12.jar[0m
+[0m[[0m[0minfo[0m] [0m[0m	published enki-common_2.12 to /home/sam/.ivy2/local/demons/enki-common_2.12/0.3-SNAPSHOT/srcs/enki-common_2.12-sources.jar[0m
+[0m[[0m[0minfo[0m] [0m[0m	published enki-common_2.12 to /home/sam/.ivy2/local/demons/enki-common_2.12/0.3-SNAPSHOT/docs/enki-common_2.12-javadoc.jar[0m
+[0m[[0m[0minfo[0m] [0m[0m	published ivy to /home/sam/.ivy2/local/demons/enki-common_2.12/0.3-SNAPSHOT/ivys/ivy.xml[0m
