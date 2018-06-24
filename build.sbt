@@ -19,14 +19,10 @@ lazy val crdts = ( project in file("enki-crdt") )
   .dependsOn(common)
 
 
-lazy val routing = ( project in file("enki-routing") )
-  .settings(commonSettings)
-  .settings(name := "enki-routing")
-  .dependsOn(common)
-
 
 lazy val root = (project in file(".") )
   .settings(commonSettings)
+  .enablePlugins(ScalaUnidocPlugin)
   .settings(name := "enki-all")
-  .aggregate(crdts, routing)
+  .aggregate(common, crdts)
 
